@@ -1,31 +1,36 @@
 import { useRef, useState } from "react";
 import "./App.css";
-import { Button, TextField } from "@mui/material";
+import { MdDelete } from "react-icons/md";
 
 function App() {
-  // const [count, setCount] = useState(0);
-  // const [text, setText] = useState("");
   const [works, setWorks] = useState([]);
+  const [id, setId] = useState(-1);
   const nameRef = useRef();
 
   const addWork = () => {
-    setWorks([...works, nameRef.current.value]);
+    setWorks([
+      ...works,
+      { index: id + 1, text: nameRef.current.value, status: false },
+    ]);
     nameRef.current.value = "";
-    // setWorks(text);
+    setId(id + 1);
   };
 
+  const deleteWork = (index) => {
+    for (let i = 0; i < works.length; i++) {
+      if (works[i].index === index) {
+        works.splice(i, 1);
+      }
+    }
+    setWorks([...works]);
+  };
+
+  console.log(works);
   return (
     <div className="app">
       <h3>ToDo App</h3>
       <div className="todoapp">
         <div className="input">
-          {/* <TextField
-            id="outlined-basic"
-            label="Add Work"
-            variant="outlined"
-            size="small"
-          />
-          <Button variant="contained">Add</Button> */}
           <input
             type="text"
             id="input-text"
@@ -39,18 +44,34 @@ function App() {
         </div>
         {works.map((item) => {
           return (
-            <ul key={item}>
-              <input type="checkbox" />
-              <p>{item}</p>
-              {/* <input type="checkbox" />
-          <li>Task 2</li>
-          <input type="checkbox" />
-          <li>Task 3</li> */}
+            <ul key={item.index}>
+              <input
+                type="checkbox"
+                onClick={() => {
+                  item.status = !item.status;
+                  setWorks([...works]);
+                }}
+              />
+              {item.status === true ? (
+                <p style={{ textDecoration: "line-through" }}>{item.text}</p>
+              ) : (
+                <p>{item.text}</p>
+              )}
+              <MdDelete
+                onClick={() => deleteWork(item.index)}
+                size={20}
+                color="red"
+                style={{
+                  marginRight: 0,
+                  paddingRight: 0,
+                }}
+              />
             </ul>
           );
         })}
       </div>
     </div>
+    // onClick={deleteWork()}
   );
 }
 
