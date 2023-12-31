@@ -1,19 +1,24 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { MdDelete } from "react-icons/md";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [works, setWorks] = useState([]);
-  const [id, setId] = useState(-1);
+  // const [id, setId] = useState(-1);
   const nameRef = useRef();
 
   const addWork = () => {
     setWorks([
       ...works,
-      { index: id + 1, text: nameRef.current.value, status: false },
+      {
+        index: uuidv4(), // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+        text: nameRef.current.value,
+        status: false,
+      },
     ]);
     nameRef.current.value = "";
-    setId(id + 1);
+    // setId(id + 1);
   };
 
   const deleteWork = (index) => {
@@ -26,6 +31,16 @@ function App() {
   };
 
   console.log(works);
+
+  useEffect(() => {
+    setWorks([...JSON.parse(localStorage.getItem("worksKey"))]);
+  }, []);
+
+  useEffect(() => {
+    if (works.length !== 0)
+      localStorage.setItem("worksKey", JSON.stringify(works));
+  }, [works]);
+
   return (
     <div className="app">
       <h3>ToDo App</h3>
@@ -71,7 +86,6 @@ function App() {
         })}
       </div>
     </div>
-    // onClick={deleteWork()}
   );
 }
 
