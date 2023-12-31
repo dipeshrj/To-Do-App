@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [works, setWorks] = useState([]);
-  // const [id, setId] = useState(-1);
   const nameRef = useRef();
 
   const addWork = () => {
@@ -18,7 +17,6 @@ function App() {
       },
     ]);
     nameRef.current.value = "";
-    // setId(id + 1);
   };
 
   const deleteWork = (index) => {
@@ -60,18 +58,35 @@ function App() {
         {works.map((item) => {
           return (
             <ul key={item.index}>
-              <input
-                type="checkbox"
-                onClick={() => {
-                  item.status = !item.status;
-                  setWorks([...works]);
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "2rem",
                 }}
-              />
-              {item.status === true ? (
-                <p style={{ textDecoration: "line-through" }}>{item.text}</p>
-              ) : (
-                <p>{item.text}</p>
-              )}
+              >
+                <input
+                  type="checkbox"
+                  onClick={() => {
+                    item.status = !item.status;
+                    setWorks([...works]);
+                  }}
+                />
+                {item.status === true ? (
+                  <p
+                    style={{
+                      textDecoration: "line-through",
+                      textAlign: "left",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {item.text}
+                  </p>
+                ) : (
+                  <p style={{ textTransform: "capitalize" }}>{item.text}</p>
+                )}
+              </div>
+
               <MdDelete
                 onClick={() => deleteWork(item.index)}
                 size={20}
